@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+        xmlns:foaf="http://xmlns.com/foaf/0.1/"
+        xmlns:dct="http://purl.org/dc/terms/"
+        xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+        xmlns:dcat="http://www.w3.org/ns/dcat#"
+        xmlns:vcard="http://www.w3.org/2006/vcard/ns#"
+        xmlns:th="http://www.thymeleaf.org"
+>
+    <th:block th:each="catalog : ${catalogs}">
+        <dcat:Dataset th:each="dataset : ${catalog.datasets}">
+            <dct:accessRights>public</dct:accessRights>
+            <dcat:contactPoint>
+                <vcard:Individual>
+                    <vcard:fn th:utext="${dataset.user.name}"/>
+                    <vcard:hasEmail th:attr="'rdf:resource'=${dataset.user.email}"/>
+                    <vcard:hasTelephone th:attr="'rdf:resource'=${dataset.user.phone}"/>
+                </vcard:Individual>
+            </dcat:contactPoint>
+            <dct:creator>
+                <foaf:Organization>
+                    <foaf:name th:utext="${catalog.platform.name}"/>
+                    <foaf:mbox th:attr="'rdf:resource'=${catalog.platform.email}"/>
+                    <foaf:phone th:attr="'rdf:resoure'=${catalog.platform.phone}"/>
+                </foaf:Organization>
+            </dct:creator>
+            <dct:description th:utext="${dataset.desc}">A longer description of dataset 1: includes three distributions, a CSV file, a PDF file and an API. Some special characters: Θεσσαλονίκη.</dct:description>
+            <dct:title th:utext="${dataset.title}">Example dataset 1</dct:title>
+            <dct:issued th:text="${#dates.format(dataset.createdAt, 'yyyy-MM-dd')}"></dct:issued>
+            <dct:modified th:utext="${#dates.format(dataset.updatedAt, 'yyyy-MM-dd''T''HH:mm:ss+09:00')}"></dct:modified>
+            <dct:language>ko</dct:language>
+            <dct:publisher>
+                <foaf:Organization>
+                    <foaf:name th:utext="${catalog.platform.name}"/>
+                    <foaf:mbox th:attr="'rdf:resoure'=${catalog.platform.email}"/>
+                    <foaf:phone th:attr="'rdf:resoure'=${catalog.platform.phone}"/>
+                </foaf:Organization>
+            </dct:publisher>
+            <dct:identifier th:text="${dataset.id}"></dct:identifier>
+            <dcat:type>dataset</dcat:type>
+            <dcat:keyword th:each="keyword : ${dataset.keywords}" th:utext="${keyword.keyword}"></dcat:keyword>
+            <dct:accrualPeriodicity rdf:resource="http://purl.org/cld/freq/monthly"/>
+            <version>2.3</version>
+            <versionDescription>2.3 배포 버전입니다.</versionDescription>
+
+            <dcat:distribution>
+                <dcat:Distribution th:each="fd : ${dataset.fileData}">
+                    <dct:license rdf:resource="http://creativecommons.org/licenses/by-nc/2.0/"/>
+                    <dct:title th:utext="${fd.filename}"></dct:title>
+                    <dcat:format th:utext="${fd.ext}">text/html</dcat:format>
+                    <dcat:byteSize th:utext="${fd.bytes}">12323</dcat:byteSize>
+                    <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" th:utext="${#dates.format(fd.updatedAt, 'yyyy-MM-dd''T''HH:mm')}"></dct:modified>
+                </dcat:Distribution>
+            </dcat:distribution>
+        </dcat:Dataset>
+
+        <dcat:DataService th:each="api : ${catalog.apiData}">
+            <dct:accessRights>public</dct:accessRights>
+            <dcat:contactPoint>
+                <vcard:Individual>
+                    <vcard:fn th:utext="${api.user.name}"/>
+                    <vcard:hasEmail th:attr="'rdf:resource'=${api.user.email}"/>
+                    <vcard:hasTelephone th:attr="'rdf:resource'=${api.user.phone}"/>
+                </vcard:Individual>
+            </dcat:contactPoint>
+            <dct:creator>
+                <foaf:Organization>
+                    <foaf:name th:utext="${catalog.platform.name}"/>
+                    <foaf:mbox th:attr="'rdf:resource'=${catalog.platform.email}"/>
+                    <foaf:phone th:attr="'rdf:resource'=${catalog.platform.phone}"/>
+                </foaf:Organization>
+            </dct:creator>
+            <dct:description th:utext="${api.desc}">A longer description of dataset 1: includes three distributions, a CSV file, a PDF file and an API. Some special characters: Θεσσαλονίκη.</dct:description>
+            <dct:title th:utext="${api.title}">Example dataset 1</dct:title>
+            <dct:issued th:text="${#dates.format(api.createdAt, 'yyyy-MM-dd')}"></dct:issued>
+            <dct:modified th:utext="${#dates.format(api.updatedAt, 'yyyy-MM-dd''T''HH:mm:ss+09:00')}"></dct:modified>
+            <dct:language>ko</dct:language>
+            <dct:publisher>
+                <foaf:Organization>
+                    <foaf:name th:utext="${catalog.platform.name}"/>
+                    <foaf:mbox th:attr="'rds:resource'=${catalog.platform.email}"/>
+                    <foaf:phone th:attr="'rdf:resource'=${catalog.platform.phone}"/>
+                </foaf:Organization>
+            </dct:publisher>
+            <dct:identifier th:text="${api.id}"></dct:identifier>
+            <dcat:type>dataService</dcat:type>
+            <version>2.3</version>
+            <versionDescription>2.3 배포 버전입니다.</versionDescription>
+        </dcat:DataService>
+    </th:block>
+</rdf:RDF>
